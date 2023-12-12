@@ -1,7 +1,8 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import './App.css'
-import styled from "styled-components"
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import "./App.css";
+import { CountryContext } from "./Contexts/CountriesContext";
 
 const Container = styled.div`
   display: flex;
@@ -62,42 +63,43 @@ const Country = styled.div`
   }
 `;
 
-
 function App() {
-  const [contriesList, setCountriesList] = useState([]);
+  const navigate = useNavigate();
+  const { countriesList } = useContext(CountryContext);
 
-  useEffect(() => {  
-    axios.get("https://restcountries.com/v3.1/all").then((res) => {
-      setCountriesList(res.data);
-    })
-  },[]);
-  
+  function handleClick(country) {
+    navigate(`/country/${country.flag}`);
+  }
+
   return (
     <Container>
       <NavBar>
-        <h1>Where in world?</h1>
+        <h1> Where in world?</h1>
       </NavBar>
       <Content>
-    {contriesList.map ((country) =>(
-      <Country key={country.name.common}>
-        <img src={country.flags.png}/>
-        <div className="country-info">
-          <strong className="country-name">{country.name.common}</strong>
-          <p> 
-            <b>Population: </b>{country.population}
-          </p>
-          <p> 
-            <b>Region: </b>{country.region}
-          </p>
-          <p>
-            <b>Capital: </b>{country.capital}
-          </p>
-        </div>
-      </Country>
-    ))}
+        {countriesList.map((country) => (
+          <Country
+            key={country.name.common}
+            onClick={() => handleClick(country)}
+          >
+            <img src={country.flags.png} />
+            <div className="country-info">
+              <strong className="country-name">{country.name.common}</strong>
+              <p>
+                <b>Population:</b> {country.population}
+              </p>
+              <p>
+                <b>Region:</b> {country.region}
+              </p>
+              <p>
+                <b>Capital:</b> {country.capital}
+              </p>
+            </div>
+          </Country>
+        ))}
       </Content>
-      </Container>
-  )
+    </Container>
+  );
 }
 
-export default App
+export default App;

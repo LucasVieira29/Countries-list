@@ -1,19 +1,17 @@
+import { useContext } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import { CountryContext } from "../Contexts/CountriesContext";
 
 const Container = styled.div`
-    display: flex;
-`
-
-const Titulo1 = styled.h1`
-    color: red;
-`
+  display: flex;
+`;
 
 const Country = () => {
-    return (
-        <Container>
-        <Titulo1>Country</Titulo1>
-        </Container>
-    );
-}
+  let { country: countryName } = useParams();
+  const { countriesList } = useContext(CountryContext);
+  const country = countriesList.find((country) => country.flag === countryName);
+  return <Container>{country && <h1>{country.name.common}</h1>}</Container>;
+};
 
 export default Country;
